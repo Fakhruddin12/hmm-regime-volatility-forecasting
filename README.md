@@ -24,7 +24,7 @@ RV^{(5)}_{t+1:t+5}
 \sqrt{
 \frac{252}{5}
 \sum_{i=1}^5 r_{t+i}^2
-}.
+}
 $$
 
 None of the returns in this target is known at prediction time, making it a
