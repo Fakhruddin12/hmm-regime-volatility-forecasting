@@ -1,0 +1,3 @@
+State,Interpretation,Mean EWMA volatility (%),Persistence,Expected duration (days)
+0,Low volatility,13.542526096132107,0.9959442973612214,246.5664002184212
+1,High volatility,31.50852653918006,0.9906128437125947,106.52853424222815

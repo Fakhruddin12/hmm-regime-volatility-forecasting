@@ -1,0 +1,9 @@
+Regime,Feature,Importance
+Low volatility,EWMA Volatility (%),0.3014811059296741
+Low volatility,Historical RV 5D (%),0.2056418894876087
+Low volatility,Historical RV 20D (%),0.33070318702296025
+Low volatility,Absolute Return (%),0.1621738175597569
+High volatility,EWMA Volatility (%),0.33147919827753675
+High volatility,Historical RV 5D (%),0.30489317813155253
+High volatility,Historical RV 20D (%),0.2726255004996531
+High volatility,Absolute Return (%),0.09100212309125762
