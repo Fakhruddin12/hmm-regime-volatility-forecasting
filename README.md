@@ -18,7 +18,7 @@ This version predicts the volatility actually realised over the **next five
 trading days**:
 
 $$
-RV^{(5)}_{t+1:t+5}
+{RV^{(5)}_{t+1:t+5}}
 =
 100
 \sqrt{
