@@ -17,14 +17,14 @@ of their 20 returns.
 This version predicts the volatility actually realised over the **next five
 trading days**:
 
-
-RV^{(5)}_{t+1:t+5}
+```math
+RV^{(5)}_{t+1,\ldots,t+5}
 =
-100
-$$\sqrt{
+100\sqrt{
 \frac{252}{5}
-\sum_{i=1}^5 r_{t+i}^2
-}$$
+\sum_{i=1}^{5} r_{t+i}^{2}
+}
+```
 
 
 None of the returns in this target is known at prediction time, making it a
