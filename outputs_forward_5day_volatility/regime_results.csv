@@ -1,5 +1,5 @@
 Regime,Model,Observations,RMSE
-Low volatility,HMM + RF,848,7.332625862743631
-Low volatility,Historical 5D Benchmark,848,8.017223555702428
-High volatility,HMM + RF,292,13.356768006161426
-High volatility,Historical 5D Benchmark,292,15.566899722633787
+Low volatility,HMM + RF,848,7.3326149924694795
+Low volatility,Historical 5D Benchmark,848,8.017223555702442
+High volatility,HMM + RF,292,13.356633380352473
+High volatility,Historical 5D Benchmark,292,15.566899722633792
