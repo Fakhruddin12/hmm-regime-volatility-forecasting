@@ -1,44 +1,54 @@
-# HMM Regime-Aware Volatility Forecasting
-### From hidden-state inference to a genuine forward prediction target
+# Forecasting Volatility in Calm and Turbulent Markets
 
-**Question:** Does separating low- and high-volatility regimes improve forecasts of NIFTY 50 volatility over the next five trading days?
+**Does a different forecasting model help when the market moves into a high-volatility period?**
 
-**Finding:** HMM plus random forests reduced daily-test RMSE by **11.69%** against a historical five-day-volatility forecast. Its improvement over a global random forest was only **0.23%** and reversed in the non-overlapping weekly check. The predictors help; a decisive incremental benefit from regime separation is not established.
+This project forecasts how much the NIFTY 50 index will fluctuate over the **next five trading days**. I built a hidden Markov model from scratch to infer calm and volatile market states, then trained a separate random forest for each state.
 
-![Forecast RMSE comparison](docs/assets/forecast_rmse_comparison.png)
+The combined model reduced forecast RMSE by **11.69%** compared with assuming the next five days will have the same volatility as the previous five. However, a **single random forest trained across both states** performed almost as well. The extra benefit from separating regimes is small and disappears in the non-overlapping evaluation.
 
-| Model | Daily-test RMSE | Non-overlapping RMSE |
+[**Results and controls**](docs/RESULTS.md) · [**Narrated notebook**](HMM_Forward_5Day_Realized_Volatility.ipynb) · [**Runnable analysis**](scripts/run_analysis.py)
+
+## What I built
+
+- A two-state hidden Markov model with forward–backward inference and Baum–Welch estimation, implemented from scratch.
+- State probabilities based only on information available at each forecast date.
+- A genuine **future-volatility target**, followed by state-specific forecasting models and useful controls.
+- A chronological evaluation that excludes unfinished training outcomes at the test boundary and checks the effect of overlapping forecast windows.
+
+## Results in context
+
+| Forecasting approach | Daily-test RMSE | Non-overlapping-test RMSE |
 |---|---:|---:|
-| HMM + random forests | **9.2569** | 8.6131 |
-| Global random forest | 9.2787 | **8.6061** |
-| Historical 5-day volatility | 10.4825 | 9.4629 |
-| EWMA volatility | 10.4758 | 10.1721 |
+| **Hidden states + separate random forests** | **9.2569** | 8.6131 |
+| One random forest for all market states | 9.2787 | **8.6061** |
+| Use the previous five days' volatility | 10.4825 | 9.4629 |
+| Exponentially weighted historical volatility | 10.4758 | 10.1721 |
 
-Volatility and its error are measured in annualised percentage points. [Saved results](outputs_forward_5day_volatility/) · [Detailed findings](docs/RESULTS.md) · [Research notebook](HMM_Forward_5Day_Realized_Volatility.ipynb)
+RMSE gives larger forecast mistakes more weight; lower is better. Errors are in **annualised volatility percentage points**, not trading returns. The daily evaluation contains 1,140 forecasts; evaluating every fifth origin leaves 228 non-overlapping observations.
 
-## Technical contribution
+The regime model improves daily RMSE by only **0.23%** over the single-forest control, and their ordering reverses in the non-overlapping check. The predictors are useful relative to the simple historical baseline; a decisive advantage from the hidden-state layer is not established.
 
-- A two-state lognormal HMM implemented from scratch using forward–backward inference and Baum–Welch estimation.
-- Causal filtered state probabilities, with the HMM fitted on the training block.
-- A five-day **future realised volatility** target, rather than tomorrow's largely overlapping historical statistic.
-- Regime-specific random forests compared with a global forest and two simple baselines.
-- A chronological 70/30 split, with training labels that end before the test boundary.
-- An additional evaluation every fifth origin to remove target-window overlap.
+![Forecast errors for the models and baselines](docs/assets/forecast_rmse_comparison.png)
+
+## How the analysis works
+
+The first 70% of the timeline is the training block. A two-state lognormal HMM is fitted there, then causal filtered probabilities identify the state using observations available at each date. Random forests predict the next five days' realised volatility. Training labels must finish before the test block starts.
+
+Adjacent daily forecasts share future returns, so the additional every-fifth-origin check removes target-window overlap. [Detailed tables, units and assumptions](docs/RESULTS.md).
 
 ## Run it
 
-Python 3.10+; use the repository root as the working directory.
+Python 3.10+; run from the repository root:
 
 ```bash
 python -m pip install -r requirements.txt
 python scripts/run_analysis.py
 ```
 
-The script uses the included historical `nifty50_prices.csv` and writes tables under `outputs_forward_5day_volatility/`. For the narrated version, open the notebook in Jupyter and run cells in order. The CSV supplies an offline snapshot; the notebook's Yahoo download path is a fallback, not a promise that future downloads reproduce the same data vintage.
+The script uses the included `nifty50_prices.csv` snapshot and writes tables to [outputs_forward_5day_volatility](outputs_forward_5day_volatility/). The notebook provides the narrated workflow. Its Yahoo download path is a fallback; future downloads need not reproduce the same data vintage.
 
-## Interpretation
+## Scope
 
-The HMM provides interpretable persistent states, with higher forecast error during high volatility. But the global-forest control is nearly as accurate. One index and one static chronological split do not establish broad market robustness or trading profitability. Walk-forward re-estimation and wider asset coverage are natural follow-up experiments.
+This is a volatility-forecasting study, not a trading backtest. One index and one static chronological split do not establish market-wide robustness. Repeated walk-forward estimation and other assets would be needed to test that broader claim.
 
-[Full methods and result tables](docs/RESULTS.md) · [Portfolio](https://github.com/Fakhruddin12)  
-**Author:** Fakhruddin Hakim Hussain
+**Author:** Fakhruddin Hakim Hussain · [Portfolio](https://github.com/Fakhruddin12)
